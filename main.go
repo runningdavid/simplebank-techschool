@@ -29,6 +29,8 @@ import (
 )
 
 func main() {
+	log.Info().Msg("Starting server")
+
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot load config")
@@ -50,6 +52,8 @@ func main() {
 	redisOpt := asynq.RedisClientOpt{
 		Addr: config.RedisAddress,
 	}
+
+	runGinServer(config, store)
 
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
 	go runTaskProcessor(config, redisOpt, store)
